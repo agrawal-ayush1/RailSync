@@ -4,6 +4,7 @@ import type {
   ScenarioData,
   OptimizationResponse,
   DisruptionEvent,
+  ApprovalResponse,
 } from './types';
 
 import { Header } from './components/Header';
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
   const [isDisruptionOpen, setIsDisruptionOpen] = useState(false);
   const [isApprovalOpen, setIsApprovalOpen] = useState(false);
   const [status, setStatus] = useState<'BASELINE' | 'OPTIMAL' | 'FEASIBLE' | 'REOPTIMIZED' | 'APPROVED' | 'DISRUPTED'>('BASELINE');
+  const [approvalDetails, setApprovalDetails] = useState<ApprovalResponse | null>(null);
   const [errorToast, setErrorToast] = useState<string | null>(null);
 
   // Load initial scenario on mount
@@ -55,6 +57,7 @@ export const App: React.FC = () => {
       const res = await api.optimizeSchedule(5.0);
       setOptResponse(res);
       setStatus(res.status as any);
+      setApprovalDetails(null);
     } catch (err: any) {
       setErrorToast(`Solver failed: ${err.message || 'CP-SAT optimization error'}`);
     } finally {
@@ -69,6 +72,7 @@ export const App: React.FC = () => {
       const res = await api.replanSchedule(disruption.occurrence_time_min);
       setOptResponse(res);
       setStatus('REOPTIMIZED');
+      setApprovalDetails(null);
       setIsDisruptionOpen(false);
     } catch (err: any) {
       setErrorToast(`Replanning error: ${err.message || 'Re-optimization failed'}`);
@@ -84,6 +88,7 @@ export const App: React.FC = () => {
       const res = await api.replanSchedule(clockMin);
       setOptResponse(res);
       setStatus('REOPTIMIZED');
+      setApprovalDetails(null);
     } catch (err: any) {
       setErrorToast(`Replan error: ${err.message}`);
     } finally {
@@ -91,12 +96,16 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleApprove = async (notes: string) => {
+  const handleApprove = async (notes: string): Promise<ApprovalResponse> => {
     try {
-      await api.approvePlan(notes);
+      const res = await api.approvePlan(notes);
+      setApprovalDetails(res);
       setStatus('APPROVED');
+      return res;
     } catch (err: any) {
-      setErrorToast(`Approval failed: ${err.message}`);
+      const msg = err.message || 'Approval failed';
+      setErrorToast(`Approval failed: ${msg}`);
+      throw new Error(msg);
     }
   };
 
@@ -106,6 +115,7 @@ export const App: React.FC = () => {
       setScenario(res.scenario);
       setOptResponse(null);
       setStatus('BASELINE');
+      setApprovalDetails(null);
     } catch (err: any) {
       setErrorToast('Reset failed');
     }
@@ -137,7 +147,7 @@ export const App: React.FC = () => {
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="mb-2 p-2 rounded-md bg-red-500/15 border border-red-500/40 text-red-300 text-xs flex items-center justify-between">
+        <div className="mb-2 p-2 rounded-md bg-red-500/15 border border-red-500/40 text-red-300 text-xs flex items-center justify-between font-mono">
           <span>{errorToast}</span>
           <button onClick={() => setErrorToast(null)} className="text-red-400 hover:text-white font-bold ml-4">
             ✕
@@ -236,8 +246,11 @@ export const App: React.FC = () => {
         onClose={() => setIsApprovalOpen(false)}
         onConfirmApprove={handleApprove}
         planResponse={optResponse || undefined}
+        currentStatus={status}
+        approvalDetails={approvalDetails}
       />
     </div>
   );
 };
 export default App;
+

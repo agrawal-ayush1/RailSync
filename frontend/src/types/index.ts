@@ -173,3 +173,12 @@ export interface ScenarioData {
   simulation_clock_min: number;
   is_synthetic_notice: string;
 }
+
+export interface ApprovalResponse {
+  status: string;
+  plan_id: string;
+  planner_notes: string;
+  dispatch_notice: string;
+  approved_at?: string;
+}
+

@@ -3,6 +3,7 @@ import type {
   ScenarioData,
   OptimizationResponse,
   DisruptionEvent,
+  ApprovalResponse,
 } from '../types';
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
@@ -45,8 +46,8 @@ export const api = {
     return res.data;
   },
 
-  approvePlan: async (plannerNotes: string = 'Approved by Controller.'): Promise<{ status: string; plan_id: string; dispatch_notice: string }> => {
-    const res = await client.post('/approve', {
+  approvePlan: async (plannerNotes: string = 'Approved by Controller.'): Promise<ApprovalResponse> => {
+    const res = await client.post<ApprovalResponse>('/approve', {
       planner_notes: plannerNotes,
     });
     return res.data;

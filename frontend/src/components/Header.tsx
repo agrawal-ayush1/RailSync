@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
       case 'REOPTIMIZED':
         return <span className="badge badge-reoptimized text-[10px] py-0.5 px-2"><RefreshCw className="w-3 h-3" /> RE-OPTIMIZED</span>;
       case 'APPROVED':
-        return <span className="badge badge-optimal text-[10px] py-0.5 px-2"><CheckCircle className="w-3 h-3" /> APPROVED</span>;
+        return <span className="badge badge-optimal text-[10px] py-0.5 px-2 bg-emerald-950/90 border-emerald-500/60 text-emerald-300"><CheckCircle className="w-3 h-3 text-emerald-400" /> DISPATCH APPROVED</span>;
       case 'DISRUPTED':
         return <span className="badge badge-disrupted text-[10px] py-0.5 px-2"><AlertTriangle className="w-3 h-3" /> DISRUPTED</span>;
       default:
@@ -133,14 +133,24 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
-          <button
-            onClick={onApprove}
-            disabled={status === 'BASELINE'}
-            className="btn btn-secondary py-1 px-2.5 text-[11px] border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 disabled:opacity-40"
-            title="Approve & Dispatch Plan"
-          >
-            <CheckCircle className="w-3 h-3" /> Approve
-          </button>
+          {status === 'APPROVED' ? (
+            <button
+              onClick={onApprove}
+              className="btn btn-secondary py-1 px-2.5 text-[11px] border-emerald-500/60 bg-emerald-950/60 text-emerald-300 hover:bg-emerald-900/60 font-bold"
+              title="View Signed Dispatch Order"
+            >
+              <ShieldCheck className="w-3 h-3 text-emerald-400" /> Dispatched
+            </button>
+          ) : (
+            <button
+              onClick={onApprove}
+              disabled={status === 'BASELINE'}
+              className="btn btn-secondary py-1 px-2.5 text-[11px] border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 disabled:opacity-40 font-bold"
+              title="Approve & Dispatch Plan"
+            >
+              <CheckCircle className="w-3 h-3" /> Approve
+            </button>
+          )}
 
           <button
             onClick={onReset}

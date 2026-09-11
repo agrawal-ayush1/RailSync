@@ -65,6 +65,7 @@ export const CommandHero: React.FC<CommandHeroProps> = ({
             <span className={`text-[10px] font-mono font-extrabold px-2 py-0.5 rounded border ${
               status === 'BASELINE' ? 'bg-slate-800 text-slate-300 border-slate-700' :
               status === 'DISRUPTED' ? 'bg-red-950 text-red-300 border-red-800' :
+              status === 'APPROVED' ? 'bg-emerald-950 text-emerald-300 border-emerald-700' :
               'bg-emerald-950 text-emerald-300 border-emerald-800'
             }`}>
               STATE: <span className="text-cyan-400 underline decoration-cyan-400">{status}</span>
@@ -99,7 +100,7 @@ export const CommandHero: React.FC<CommandHeroProps> = ({
             <div className="flex items-center gap-2 bg-slate-950/90 px-3 py-1.5 rounded border border-slate-800 text-xs font-mono shadow-inner">
               <div className="flex items-center gap-1.5 text-emerald-400 font-extrabold text-[11px]">
                 <Cpu className="w-3.5 h-3.5 text-emerald-400" />
-                <span>CP-SAT {solverStatus || status}</span>
+                <span>CP-SAT {solverStatus || (status === 'APPROVED' ? 'DISPATCH APPROVED' : status)}</span>
               </div>
               <span className="text-slate-700">|</span>
               <div className="text-cyan-300 font-black text-[11px]">
