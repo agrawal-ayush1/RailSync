@@ -48,9 +48,9 @@ const getDeptStyle = (depts: string[]) => {
 const getDeptLabel = (dept: string) => DEPT_COLORS[dept]?.label || dept.split('(')[0]?.trim() || dept;
 
 /* ── layout ── */
-const SIDEBAR_W = 220; // px
-const ROW_H = 100;     // px  – taller rows for layered trains + blocks
-const HEADER_H = 38;
+const SIDEBAR_W = 200; // px
+const ROW_H = 88;      // px  – optimized height for layered trains + blocks
+const HEADER_H = 32;
 const TIME_MINS = 1440;
 
 const formatTime = (mins: number) => {

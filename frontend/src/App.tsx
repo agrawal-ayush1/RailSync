@@ -21,7 +21,6 @@ import {
   Layers,
   Cpu,
   Navigation,
-  Info,
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -113,7 +112,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 p-4 md:p-6">
+    <div className="min-h-screen bg-[#070b14] text-slate-100 px-3 py-2 md:px-4 md:py-2.5">
       {/* Top Header Navigation */}
       <Header
         status={status}
@@ -125,17 +124,6 @@ export const App: React.FC = () => {
         onApprove={() => setIsApprovalOpen(true)}
         onReset={handleReset}
       />
-
-      {/* Synthetic Notice Banner */}
-      <div className="mb-4 px-4 py-2 bg-slate-900/60 rounded-lg border border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-        <span className="flex items-center gap-2">
-          <Info className="w-4 h-4 text-cyan-400 shrink-0" />
-          {scenario?.is_synthetic_notice || 'Synthetic Demo Data — not live Indian Railways data.'}
-        </span>
-        <span className="hidden md:inline text-slate-500">
-          Indian Railways Operation Concept Prototype (SIH26027)
-        </span>
-      </div>
 
       {/* Command Hero & System Pipeline Stepper */}
       <CommandHero
@@ -149,7 +137,7 @@ export const App: React.FC = () => {
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="mb-4 p-3 rounded-lg bg-red-500/15 border border-red-500/40 text-red-300 text-xs flex items-center justify-between">
+        <div className="mb-2 p-2 rounded-md bg-red-500/15 border border-red-500/40 text-red-300 text-xs flex items-center justify-between">
           <span>{errorToast}</span>
           <button onClick={() => setErrorToast(null)} className="text-red-400 hover:text-white font-bold ml-4">
             ✕
@@ -164,34 +152,34 @@ export const App: React.FC = () => {
       />
 
       {/* Primary Tab Navigation */}
-      <div className="flex border-b border-slate-800 mb-4 bg-slate-900/40 px-2 rounded-t-lg">
+      <div className="flex flex-wrap items-center border-b border-slate-800/90 mb-1.5 bg-slate-950/80 px-1.5 pt-1 rounded-t-lg gap-1">
         <button
           onClick={() => setActiveTab('gantt')}
-          className={`tab-btn flex items-center gap-2 ${activeTab === 'gantt' ? 'active' : ''}`}
+          className={`tab-btn flex items-center gap-1.5 font-mono py-1.5 px-3 text-xs ${activeTab === 'gantt' ? 'active' : ''}`}
         >
-          <Clock className="w-4 h-4" />
-          Corridor Timeline (Gantt Console)
+          <Clock className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Operations Timeline (Gantt)</span>
         </button>
         <button
           onClick={() => setActiveTab('corridor')}
-          className={`tab-btn flex items-center gap-2 ${activeTab === 'corridor' ? 'active' : ''}`}
+          className={`tab-btn flex items-center gap-1.5 font-mono py-1.5 px-3 text-xs ${activeTab === 'corridor' ? 'active' : ''}`}
         >
-          <Navigation className="w-4 h-4" />
-          Corridor Map Schematic
+          <Navigation className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Corridor Track Schematic</span>
         </button>
         <button
           onClick={() => setActiveTab('super_tasks')}
-          className={`tab-btn flex items-center gap-2 ${activeTab === 'super_tasks' ? 'active' : ''}`}
+          className={`tab-btn flex items-center gap-1.5 font-mono py-1.5 px-3 text-xs ${activeTab === 'super_tasks' ? 'active' : ''}`}
         >
-          <Layers className="w-4 h-4" />
-          Super-Task Inspector ({optResponse?.super_tasks.length || 0})
+          <Layers className="w-3.5 h-3.5 text-amber-400" />
+          <span>Super-Task Hub ({optResponse?.super_tasks.length || 0})</span>
         </button>
         <button
           onClick={() => setActiveTab('explain')}
-          className={`tab-btn flex items-center gap-2 ${activeTab === 'explain' ? 'active' : ''}`}
+          className={`tab-btn flex items-center gap-1.5 font-mono py-1.5 px-3 text-xs ${activeTab === 'explain' ? 'active' : ''}`}
         >
-          <Cpu className="w-4 h-4" />
-          Decision Inspector ({optResponse?.explanations.length || 0})
+          <Cpu className="w-3.5 h-3.5 text-purple-400" />
+          <span>Decision Inspector ({optResponse?.explanations.length || 0})</span>
         </button>
       </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { DisruptionEvent, OptimizationResponse } from '../types';
-import { AlertTriangle, RefreshCw, X, ShieldAlert } from 'lucide-react';
+import { AlertTriangle, RefreshCw, X, ShieldAlert, ArrowRight } from 'lucide-react';
 
 interface DisruptionDrawerProps {
   isOpen: boolean;
@@ -47,36 +47,53 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
   const diff = lastResponse?.diff_from_previous;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-xl bg-slate-900 border-l border-slate-800 p-6 overflow-y-auto flex flex-col justify-between shadow-2xl">
+    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+      <div className="w-full max-w-xl bg-slate-950 border-l border-red-900/40 p-6 overflow-y-auto flex flex-col justify-between shadow-2xl">
         <div>
           {/* Drawer Header */}
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <div className="p-3 bg-red-500/15 border border-red-500/30 rounded-xl shadow-lg shadow-red-500/10">
                 <AlertTriangle className="w-6 h-6 text-red-400" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">Inject Operational Disruption</h2>
-                <p className="text-xs text-slate-400">Simulate track defects, signal failures, or train delays</p>
+                <h2 className="text-lg font-extrabold text-white font-mono uppercase tracking-tight">
+                  Inject Operational Disruption
+                </h2>
+                <p className="text-xs text-slate-400 font-medium">Simulate track defects, signal failures, or unscheduled train delays</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
+          {/* Operational State Transition Visualizer */}
+          <div className="mb-6 p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center justify-between text-[11px] font-mono">
+            <span className="text-slate-400 font-bold">NORMAL</span>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-600" />
+            <span className="text-red-400 font-extrabold bg-red-950/80 px-2 py-0.5 rounded border border-red-800/60">
+              ⚠ DISRUPTION
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-600" />
+            <span className="text-cyan-300 font-bold">CP-SAT REPLAN</span>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-600" />
+            <span className="text-emerald-400 font-bold">NEW SAFE PLAN</span>
+          </div>
+
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <form onSubmit={handleSubmit} className="space-y-4.5 mb-6">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">DISRUPTION TYPE</label>
+              <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+                DISRUPTION TYPE
+              </label>
               <select
                 value={disruptionType}
                 onChange={(e) => setDisruptionType(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-md p-2 text-sm text-white focus:border-cyan-400 outline-none"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-red-500 font-mono outline-none"
               >
                 <option value="EMERGENCY_RAIL_DEFECT">Emergency Rail Defect / Fracture (P-Way Urgent)</option>
                 <option value="SIGNAL_INTERLOCKING_FAILURE">Signal Interlocking Failure (S&T Incident)</option>
@@ -86,11 +103,13 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">TARGET TRACK SECTION</label>
+              <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+                TARGET TRACK SECTION
+              </label>
               <select
                 value={sectionId}
                 onChange={(e) => setSectionId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-md p-2 text-sm text-white focus:border-cyan-400 outline-none"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-red-500 font-mono outline-none"
               >
                 <option value="SEC-UP-GZB-ALJN">SEC-UP-GZB-ALJN (Ghaziabad - Aligarh UP)</option>
                 <option value="SEC-DN-ALJN-GZB">SEC-DN-ALJN-GZB (Aligarh - Ghaziabad DOWN)</option>
@@ -101,8 +120,10 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">DISRUPTION TIME (SIM CLOCK)</label>
-                <div className="flex items-center gap-2">
+                <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+                  DISRUPTION TIME (SIM CLOCK)
+                </label>
+                <div className="flex items-center gap-2.5 bg-slate-900 p-2 rounded-lg border border-slate-800">
                   <input
                     type="range"
                     min="60"
@@ -110,45 +131,49 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
                     step="30"
                     value={occurrenceMin}
                     onChange={(e) => setOccurrenceMin(Number(e.target.value))}
-                    className="w-full accent-cyan-400"
+                    className="w-full accent-red-400"
                   />
-                  <span className="text-xs font-mono font-bold text-cyan-300 shrink-0">
+                  <span className="text-xs font-mono font-black text-cyan-300 shrink-0">
                     {formatMinToTime(occurrenceMin)}
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">BLOCKAGE DURATION (MINS)</label>
+                <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+                  BLOCKAGE DURATION (MINS)
+                </label>
                 <input
                   type="number"
                   min="30"
                   max="240"
                   value={durationMins}
                   onChange={(e) => setDurationMins(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-md p-2 text-sm text-white focus:border-cyan-400 outline-none font-mono"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-red-500 outline-none font-mono font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">INCIDENT DESCRIPTION</label>
+              <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+                INCIDENT DESCRIPTION
+              </label>
               <input
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-md p-2 text-sm text-white focus:border-cyan-400 outline-none"
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-red-500 outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={isReplanning}
-              className="w-full btn btn-danger py-3 text-sm flex items-center justify-center gap-2"
+              className="w-full btn btn-danger py-3 text-xs font-extrabold tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-red-500/20 hover:shadow-red-500/30"
             >
               {isReplanning ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" /> Re-optimizing Schedule...
+                  <RefreshCw className="w-4 h-4 animate-spin text-white" /> Re-optimizing CP-SAT Schedule...
                 </>
               ) : (
                 <>
@@ -160,8 +185,8 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
 
           {/* Schedule Diff Inspection */}
           {diff && (
-            <div className="p-4 rounded-lg bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between text-xs font-bold">
+            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3 shadow-inner">
+              <div className="flex items-center justify-between text-xs font-bold font-mono">
                 <span className="text-cyan-300 flex items-center gap-1.5">
                   <ShieldAlert className="w-4 h-4 text-cyan-400" /> REPLAN SCHEDULE DIFF
                 </span>
@@ -171,23 +196,23 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2 rounded bg-slate-900 text-slate-300 border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">FROZEN HISTORICAL ACTIVITIES:</div>
-                  <div className="text-emerald-400 font-bold">{diff.frozen_activity_count} LOCKED</div>
+                <div className="p-2.5 rounded-lg bg-slate-950 text-slate-300 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] font-bold">FROZEN HISTORICAL ACTIVITIES:</div>
+                  <div className="text-emerald-400 font-black text-sm">{diff.frozen_activity_count} LOCKED</div>
                 </div>
-                <div className="p-2 rounded bg-slate-900 text-slate-300 border border-slate-800">
-                  <div className="text-slate-500 text-[10px]">SHIFTED MAINTENANCE BLOCKS:</div>
-                  <div className="text-amber-400 font-bold">{diff.moved_blocks.length} RE-SCHEDULED</div>
+                <div className="p-2.5 rounded-lg bg-slate-950 text-slate-300 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] font-bold">SHIFTED MAINTENANCE BLOCKS:</div>
+                  <div className="text-amber-400 font-black text-sm">{diff.moved_blocks.length} RE-SCHEDULED</div>
                 </div>
               </div>
 
               {diff.moved_blocks.length > 0 && (
                 <div className="space-y-1 text-xs font-mono">
-                  <div className="text-[10px] text-slate-400 font-bold">SHIFTED BLOCKS DETAILS:</div>
+                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">SHIFTED BLOCKS DETAILS:</div>
                   {diff.moved_blocks.map((mb) => (
-                    <div key={mb.block_id} className="p-1.5 rounded bg-slate-900 text-slate-300 flex items-center justify-between text-[11px]">
-                      <span>{mb.block_id}: {mb.work_description}</span>
-                      <span className="text-amber-300 font-bold">+{mb.shift_mins}m shift</span>
+                    <div key={mb.block_id} className="p-2 rounded bg-slate-950 text-slate-300 flex items-center justify-between text-[11px] border border-slate-800/80">
+                      <span className="font-semibold">{mb.block_id}: {mb.work_description}</span>
+                      <span className="text-amber-300 font-black">+{mb.shift_mins}m shift</span>
                     </div>
                   ))}
                 </div>
@@ -208,3 +233,4 @@ export const DisruptionDrawer: React.FC<DisruptionDrawerProps> = ({
     </div>
   );
 };
+
